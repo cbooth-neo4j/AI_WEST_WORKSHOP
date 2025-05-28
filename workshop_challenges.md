@@ -22,17 +22,16 @@ Create a new relationship type `SKILL_COOCCURRENCE` that connects skills frequen
 2. Create relationships for skill pairs that co-occur more than 3 times
 3. Find the most "central" skills in this network
 
-## Module 2: Agent Challenges 
 
-### Challenge 3.1: Career Path Advisor 🚀
+### Challenge 2.1: Career Path Advisor 🚀
 **Difficulty: Beginner**
-Create a new agent tool that suggests career progression paths:
-- Input: Current person's skills
-- Output: Recommended skills to learn next based on similar successful people
+Create a new agent tool that can make recommendations
+- Input: "Who would you recommend i use for a AWS project and Python project?"
+- Output: List of recommended people based off their skills
 - Include reasoning about why these skills are recommended
 
-### Challenge 3.2: Team Formation Agent 👥
-**Difficulty: Intermediate**
+### Challenge 2.2: Team Formation Agent 👥
+**Difficulty: Advanced**
 Build an agent that can form optimal teams:
 1. **Tool**: `form_project_team(required_skills: List[str], team_size: int)`
 2. Find people with complementary skills
@@ -40,9 +39,9 @@ Build an agent that can form optimal teams:
 
 ## Bonus Creative Challenges
 
-### Challenge 5.1: Skill Compatibility Score 💕
+### Challenge 3.1: Skill Compatibility Score 💕
 Create a "professional compatibility" system like a dating app but for work partnerships. Calculate compatibility scores based on complementary skills, similar experience levels, and community connections.
 
-### Challenge 5.2: Use this workbook to build your own with your AI GraphRAG agent with synthetic data!
+### Challenge 3.2: Use this workbook to build your own with your AI GraphRAG agent with synthetic data!
 
 **Remember**: The goal is to learn and have fun! Don't hesitate to ask for help, collaborate with others, and experiment with different approaches. The best solutions often come from combining concepts in unexpected ways! 🚀 

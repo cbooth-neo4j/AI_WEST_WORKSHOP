@@ -221,10 +221,11 @@ def ask_to_agent(question):
 # * What skills are similar to PowerBI and Data Visualization?
 # * Which persons have similar skills as Daniel Hill?
 # * Which persons have Python and AWS experience?"
-# * Find me people who have python skills
+# * who would you recommend i use for a AWS and powerBI project? (This won't work!)
+
 
 # %%
-question = "Find me people who have python skills"
+question = "What skills are similar to PowerBI and Data Visualization?"
 ask_to_agent(question)
 
 # %% [markdown]
