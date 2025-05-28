@@ -6,7 +6,7 @@
 **Difficulty: Beginner**
 Write a Cypher query to find the "skill influencers" - people who know the most rare skills (skills known by fewer than 5 people).
 
-**Bonus**: Create a visualisation showing the relationship between rare skills and the people who know them.
+**Bonus**: Visualise showing the relationship between rare skills and the people who know them in Bloom.
 
 ### Challenge 1.2: Community Detective 🕵️
 **Difficulty: Intermediate**
@@ -22,6 +22,7 @@ Create a new relationship type `SKILL_COOCCURRENCE` that connects skills frequen
 2. Create relationships for skill pairs that co-occur more than 3 times
 3. Find the most "central" skills in this network
 
+## Module 3: AI Agent challenges
 
 ### Challenge 2.1: Career Path Advisor 🚀
 **Difficulty: Beginner**
@@ -30,7 +31,7 @@ Create a new agent tool that can make recommendations
 - Output: List of recommended people based off their skills
 - Include reasoning about why these skills are recommended
 
-### Challenge 2.2: Team Formation Agent 👥
+### Challenge 2.3: Team Formation Agent 👥
 **Difficulty: Advanced**
 Build an agent that can form optimal teams:
 1. **Tool**: `form_project_team(required_skills: List[str], team_size: int)`

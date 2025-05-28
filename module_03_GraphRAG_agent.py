@@ -19,7 +19,6 @@ from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import PromptTemplate
 from langgraph.prebuilt import create_react_agent
-from openai import OpenAI
 from typing import List
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
@@ -53,6 +52,7 @@ driver.execute_query(
     routing_=RoutingControl.READ,
     result_transformer_= lambda r: r.to_df()
 )
+
 
 # %% [markdown]
 # ## Agent Thinking
@@ -137,13 +137,13 @@ def person_similarity(person_name: str) -> pd.DataFrame:
         result_transformer_= lambda r: r.to_df(),
         person_name = person_name
     )
+person_similarity("Christopher Jackson")
 
 # %% [markdown]
 # ## Tool 3 - Persons based on skills
 def find_person_based_on_skills(skills: List[Skill]) -> pd.DataFrame:
-    """
-    Find persons based on skills they have. Skills are specified by their names. 
-    Note that similar skills can be found. These are considered similar. 
+    """ 
+    Returns people who have either the exact skills or semantically similar skills. use for recommendations
     """
     skills = [s.name for s in skills]
     skills_vectors = embeddings.embed_documents(skills)
@@ -151,44 +151,49 @@ def find_person_based_on_skills(skills: List[Skill]) -> pd.DataFrame:
         """
         UNWIND $skills_vectors AS v
         CALL db.index.vector.queryNodes('skill-embeddings', 3, TOFLOATLIST(v)) YIELD node, score
-        WHERE score > 0.89
+        WHERE score > 0.45
         OPTIONAL MATCH (node)-[:SIMILAR_SEMANTIC]-(s:Skill)
-        WITH COLLECT(node) AS nodes, COLLECT(DISTINCT s) AS skills
-        WITH nodes + skills AS all_skills
+        WHERE s IS NOT NULL
+        WITH COLLECT(DISTINCT node) AS direct_matches, COLLECT(DISTINCT s) AS semantic_matches
+        WITH direct_matches + semantic_matches AS all_skills
         UNWIND all_skills AS skill
         MATCH (p:Person)-[:KNOWS]->(skill)
-        RETURN p.name AS person, COUNT(DISTINCT(skill)) AS score, COLLECT(DISTINCT(skill.name)) as similar_skills
-        ORDER BY score DESC LIMIT 10
+        WITH p, COLLECT(DISTINCT skill.name) as matched_skills, COUNT(DISTINCT skill) as skill_count
+        WHERE skill_count > 0
+        RETURN 
+            p.name as person_name,
+            matched_skills,
+            skill_count as number_of_relevant_skills
+        ORDER BY number_of_relevant_skills DESC
+        LIMIT 10
         """,
         database_=DATABASE,
         routing_=RoutingControl.READ,
         result_transformer_= lambda r: r.to_df(),
         skills_vectors = skills_vectors
-)
-person_similarity("Christopher Jackson")
+    )
+find_person_based_on_skills([Skill(name='Security'), Skill(name='Pandas')])
 
 # %% [markdown]
 # ## Tool 4 - Similar Skills
 def find_similar_skills(skills: List[Skill]) -> pd.DataFrame:
     """Find similar skills to list of skills specified. Skills are specified by a list of their names"""
     skills = [s.name for s in skills]
-    skills_vectors = embeddings.embed_documents(skills)
+    print(f"Searching for skills similar to: {skills}")
     return driver.execute_query(
     """
-        UNWIND $skills_vectors AS v
-        CALL db.index.vector.queryNodes('skill-embeddings', 3, TOFLOATLIST(v)) YIELD node, score
-        WHERE score > 0.89
-        OPTIONAL MATCH (node)-[:SIMILAR_SEMANTIC]-(s:Skill)
-        WITH COLLECT(node) AS nodes, COLLECT(DISTINCT s) AS skills
-        WITH nodes + skills AS all_skills
-        UNWIND all_skills AS skill
-        RETURN DISTINCT skill.name as skill_name
+        UNWIND $skills AS skill_name
+        MATCH (s:Skill {name: skill_name})-[r:SIMILAR_SEMANTIC]-(similar:Skill)
+        WHERE r.score > 0.89
+        RETURN DISTINCT similar.name as skill_name, r.score as similarity_score
+        ORDER BY similarity_score DESC
     """,
     database_=DATABASE,
     routing_=RoutingControl.READ,
     result_transformer_= lambda r: r.to_df(),
-    skills_vectors = skills_vectors
+    skills = skills
 )
+find_similar_skills([Skill(name='Python')])
 
 # %% [markdown]
 # ## Setting up the Agent
@@ -199,15 +204,13 @@ response.content
 tools = [
     retrieve_skills_of_person,
     person_similarity,
+    find_similar_skills,
+    find_person_based_on_skills
 ]
 
 # %% [markdown]
 # ## Running Agents with LangGraph
 agent_executor = create_react_agent(llm, tools)
-
-response = agent_executor.invoke({"messages": [HumanMessage(content="hi!")]})
-
-response["messages"]
 
 def ask_to_agent(question):
     for step in agent_executor.stream(
@@ -218,15 +221,14 @@ def ask_to_agent(question):
 
 # %% [markdown]
 # Run some examples!
-# * What skills are similar to PowerBI and Data Visualization?
-# * Which persons have similar skills as Daniel Hill?
-# * Which persons have Python and AWS experience?"
-# * who would you recommend i use for a AWS and powerBI project? (This won't work!)
-
+# * "What skills does Chris Booth have?"
+# * "What skills are similar to PowerBI and Data Visualization?"
+# * "Which persons have similar skills as Daniel Hill?"
+# * "Who would you recommend for a WordPress and C++ project?"
 
 # %%
-question = "What skills are similar to PowerBI and Data Visualization?"
-ask_to_agent(question)
+ask_to_agent("Who would you recommend for a WordPress and C++ project?")
+
 
 # %% [markdown]
 # ## Chatbot interface
@@ -277,7 +279,7 @@ with gr.Blocks() as demo:
     clear.click(lambda: [], None, chatbot, queue=False)
 
 demo.queue()
-demo.launch(share=True)
+demo.launch(share=False)
 
 # %% [markdown]
 # ## BONUS ROUND - Text2Cypher

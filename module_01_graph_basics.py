@@ -8,7 +8,6 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 from neo4j import GraphDatabase, RoutingControl
-from langchain_openai import OpenAIEmbeddings
 from graphdatascience import GraphDataScience
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -459,50 +458,28 @@ similar_skills_df
 
 # %% [markdown]
 # Now we can find similar people based on semantic similarity
+
 similar_persons_df  = driver.execute_query(
     """
-    MATCH (p1:Person)-[:KNOWS]->(s:Skill)
+    MATCH (p1:Person {name: $person_name_1})-[:KNOWS]->(s:Skill)
     WITH p1, COLLECT(s.name) as skills_1
-    CALL (p1, p1){
+    CALL (p1){
       MATCH (p1)-[:KNOWS]->(s1:Skill)-[r:SIMILAR_SEMANTIC]-(s2:Skill)<-[:KNOWS]-(p2:Person)
       RETURN p1 as person_1, p2 as person_2, SUM(r.score) AS score
       UNION 
-      MATCH (p1)-[r:SIMILAR_SKILLSET]-(p2:Person)
+      MATCH (p1)-[r:SIMILAR_SKILLSET]->(p2:Person)
       RETURN p1 as person_1, p2 AS person_2, SUM(r.overlap) AS score
     }
     WITH person_1.name as person_1, skills_1, person_2, SUM(score) as score
-    WHERE score > 3
+    WHERE score >= 1
     MATCH (person_2)-[:KNOWS]->(s:Skill)
     RETURN person_1, skills_1,  person_2.name as person_2, COLLECT(s.name) as skills_2, score
     ORDER BY score DESC
     """,
     database_=DATABASE,
     routing_=RoutingControl.READ,
-    result_transformer_= lambda r: r.to_df()
-)
-similar_persons_df
-# %% [markdown]
-# # Calculate for all of them wuith a score of >3
-similar_persons_df  = driver.execute_query(
-    """
-    MATCH (p1:Person)-[:KNOWS]->(s:Skill)
-    WITH p1, COLLECT(s.name) as skills_1
-    CALL (p1, p1){
-      MATCH (p1)-[:KNOWS]->(s1:Skill)-[r:SIMILAR_SEMANTIC]-(s2:Skill)<-[:KNOWS]-(p2:Person)
-      RETURN p1 as person_1, p2 as person_2, SUM(r.score) AS score
-      UNION 
-      MATCH (p1)-[r:SIMILAR_SKILLSET]-(p2:Person)
-      RETURN p1 as person_1, p2 AS person_2, SUM(r.overlap) AS score
-    }
-    WITH person_1.name as person_1, skills_1, person_2, SUM(score) as score
-    WHERE score > 3
-    MATCH (person_2)-[:KNOWS]->(s:Skill)
-    RETURN person_1, skills_1,  person_2.name as person_2, COLLECT(s.name) as skills_2, score
-    ORDER BY score DESC
-    """,
-    database_=DATABASE,
-    routing_=RoutingControl.READ,
-    result_transformer_= lambda r: r.to_df()
+    result_transformer_= lambda r: r.to_df(),
+    person_name_1 = person_name_1
 )
 similar_persons_df
 
