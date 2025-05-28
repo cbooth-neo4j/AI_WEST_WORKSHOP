@@ -13,17 +13,8 @@ This repository contains workshop materials and code for AI West, focusing on gr
 1. Create a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate # On mac 
 ```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Each module can be run independently. Please refer to the workshop slides for detailed instructions on each module.
 
 ## License
 

@@ -37,14 +37,12 @@ Build an agent that can form optimal teams:
 1. **Tool**: `form_project_team(required_skills: List[str], team_size: int)`
 2. Find people with complementary skills
 3. Minimize skill overlap while maximizing coverage
-4. Consider community diversity for better collaboration
 
 ## Bonus Creative Challenges
 
 ### Challenge 5.1: Skill Compatibility Score 💕
 Create a "professional compatibility" system like a dating app but for work partnerships. Calculate compatibility scores based on complementary skills, similar experience levels, and community connections.
 
-### Challenge 5.2: Knowledge Transfer Optimizer 🎓
-Build an agent that identifies optimal knowledge transfer paths - who should teach what to whom to maximize organizational learning efficiency.
+### Challenge 5.2: Use this workbook to build your own with your AI GraphRAG agent with synthetic data!
 
 **Remember**: The goal is to learn and have fun! Don't hesitate to ask for help, collaborate with others, and experiment with different approaches. The best solutions often come from combining concepts in unexpected ways! 🚀 
