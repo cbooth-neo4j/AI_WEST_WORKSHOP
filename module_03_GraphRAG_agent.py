@@ -349,7 +349,7 @@ def perform_aggregation_query(question: str) -> pd.DataFrame:
 perform_aggregation_query('describe communities by skills') 
 
 # %% [markdown]
-# How many people share skills with Isabella Allen, and what are the skills
+# How many people share skills with Isabella Allen, and what are the skills?
 perform_aggregation_query('how many people share skills with Isabella Allen, and what are the skills')
 
 # %% [markdown]
