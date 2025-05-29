@@ -6,7 +6,7 @@
 # * Define Tooling
 # * Create agents with the available tools
 # * Chatbot for an Agent
-# * Text2Cypher (if we have time)
+# * Text2Cypher
 
 # %% [markdown]
 # As before, let's setup the environment
@@ -223,7 +223,7 @@ def ask_to_agent(question):
 # Run some examples!
 # * "What skills does Chris Booth have?"
 # * "What skills are similar to PowerBI and Data Visualization?"
-# * "Which persons have similar skills as Daniel Hill?"
+# * "Which people have similar skills as Daniel Hill?"
 # * "Who would you recommend for a WordPress and C++ project?"
 
 # %%

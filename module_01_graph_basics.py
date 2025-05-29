@@ -12,7 +12,6 @@ from graphdatascience import GraphDataScience
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 # %% [markdown] 
 # ## Setup
 # ### Load environment variables
@@ -123,7 +122,7 @@ for chunk in split_dataframe(skills_df):
     )
 
 # %% [markdown]
-# ## Explroe the Graph
+# ## Explore the Graph
 # Show the whole graph with MATCH p=()-[]-() RETURN p LIMIT 25.
 # * MATCH (n:Person) RETURN n LIMIT 25;
 # * MATCH (n:Skill) RETURN n LIMIT 25;

@@ -1,6 +1,14 @@
+
+# %% [markdown]
+# # Module 2: Taming Unstructured Data
+# This module focuses on processing and analyzing unstructured data using Neo4j and AI capabilities.
+# We'll explore techniques for:
+# - Extracting structured information from text
+# - Building knowledge graphs from unstructured sources
+# - Combining graph data with language & embedding models
+
 # %% [markdown] 
 # ## Setup again
-
 import os
 import pandas as pd
 from dotenv import load_dotenv
