@@ -75,6 +75,7 @@ result = driver.execute_query(
 )
 if result.iloc[0]['Count'] == 0:
     print("Connection successful but database is empty")
+print(f"Connected to Neo4j database at {HOST} using database '{DATABASE}'")
 result
 
 # %% [markdown] 

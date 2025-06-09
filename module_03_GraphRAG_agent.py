@@ -227,7 +227,7 @@ def ask_to_agent(question):
 # * "Who would you recommend for a WordPress and C++ project?"
 
 # %%
-ask_to_agent("Who would you recommend for a WordPress and C++ project?")
+ask_to_agent("What skills does Chris Booth have?")
 
 
 # %% [markdown]
